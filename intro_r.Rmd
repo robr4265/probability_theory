@@ -1,4 +1,7 @@
 # Variables
+```{r variables}
+x = 2.3
+```
 # Vectors
 # Functions
 # Loops
