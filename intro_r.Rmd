@@ -1,10 +1,203 @@
 # Variables
+# https://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html
 ```{r variables}
 x = 2.3
+x <- 2.3
 ```
 # Vectors
+```{r vectors}
+x = c(1, 2, 3, 4, 5)
+x[3] - x[1] # 3 - 1 = 2 
+
+# R indexes start at 1
+# Access two or more consecutive elements
+x[2:4] # 2 3 4
+
+x[-2] # Removes the second element, result: 1 3 4 5
+
+z = x[-2] # Removes the second element, result: 1 3 4 5
+y = z[-2] # Removes the second element, result: 1 4 5
+x[-(2:4)] # Removes the second, third and fourth elements, result: 1 5
+x[c(2,5)] # Selects the second and fifth elements, result: 2 5
+x[-c(2,5)] # Removes the second and fifth elements, result: 1 3 4
+```
+```{r vectors_example}
+# In the next cell, define a vector named y whose elements are (2,7,-2,4,0,3.3). Then add the vectors x and y. 
+x = c(3,1,7,4,-1,8)
+y = c(2,7,-2,4,0,3.3)
+x + y # 5 8 5 8 -1 11.3
+x + 7 # 10 8 14 11 6 15
+# sequnce of numbers 1: 6
+seq(1, 6) # 1 2 3 4 5 6
+seq(1, 6, by = 2) # 1 3 5
+# Find elements with certain conditions
+x[x>=5] # 7 8
+x[x==7] # 7
+x[x!=7] # 3 1 4 -1 8
+# Location of the element
+which(x >= 5, arr.ind = FALSE, useNames = TRUE) # 3 6
+x >= 5 # FALSE FALSE TRUE FALSE FALSE TRUE
+x
+y
+y[x == 7] # -2
+x[x > 1 & x < 7] # 3 4
+x[x >= 7 | x < 1] # 7 -1 8
+x[(x>1 & x<7)| x<0] # 3 4 -1
+```
 # Functions
+```{r functions}
+sum(x)
+prod(x)
+length(x)
+mean(x)
+exp(x)
+log(x)    # A warning is expected here!
+sqrt(x) # A warning is expected here!
+
+var(x)
+(sum(x^2)-sum(x)^2/length(x))/(length(x)-1)
+```
 # Loops
+```{r loops}
+for (i in 1:3)
+{
+    print(i)
+}
+
+for (i in 1:length(x))
+
+{
+    x[i] = x[i] - i
+    print(x[i])
+}
+
+```
+```{r loops_example2}
+# Herein lies an important lesson about R. "Looping" through
+# operations can be quite slow when you are coding something
+# more complicated. It is good practice to always think about
+# ways to avoid loops by harnessing the power of matrix/vector
+# manipulation in R. For example, we can restore the vector x
+# to hold its original values by writing another loop, or, we
+# can make a sequence from 1 to the length of x like this
+
+# 1:length(x)
+
+# and subtract it all at once like this
+
+x = x - (1:length(x)) # 2 -1  4  0 -6  2
+```
+```{r while_loops}
+i = 1
+while(i < 4)
+{
+   print(i)
+   i = i+1
+}
+```
 # Conditionals
+
+```{r conditionals}
+x = c(3,1,7,4,-1,8)
+
+y = rep(0,length(x))   # repeat 0, length(x) times
+
+for (i in 1:length(x))
+{
+    if(x[i]<=5)
+    {
+        y[i] = 1
+    }
+    else
+    { 
+        y[i] = -1          
+    }           
+}    
+
+y
+
+# The same result can be achieved with the following code
+y <- rep(-1, length(x))
+y[x <= 5] <- 1
+```
 # Matrices
+```{r matrices}
+x = c(3,1,7,4,-1,8)
+y = c(2,7,-2,4,0,3.3)
+
+A = matrix(0,6,6)
+
+A[1,] = x
+A[2,] = y
+A[3,] = x + y
+A
+
+# As in the case with vectors, typing A*A will perform elementwise
+# multiplication. In order to perform actual matrix multiplication,
+# where elements come from dot products between columns and rows, we would type A%*%A.
+# To get the inverse of a matrix we use the solve(A) function.
+```
 # Data Frames
+```{r data_frames}
+# A "data frame" is like a matrix but is far more flexible as it can consist of many
+# different types of data
+dogs <- read.table("dogs.csv")
+dogs <- read.csv("dogs.csv", header = TRUE)
+dogs$age
+dogs$name<-as.character(dogs$name)
+dogs$age<-as.numeric(dogs$age)  
+dogs$weights<-as.numeric(dogs$weight)
+dogs
+dim(dogs)[1] # number of rows
+dogs[3,1] # 3rd row, 1st column
+dogs[,2] # 2nd column
+dogs$name[dogs$age > 5.5]
+mean(dogs$weights)
+mean(dogs$weight[dogs$age>5.5]) # mean weight of dogs older than 5.5 years
+```
+# Plotting
+```{r plotting1}
+plot(dogs$age,dogs$weight,xlab="age",ylab="weight",main="My Wonderful Plot")
+```
+```{r plotting2}
+plot(dogs$age,dogs$weight,xlab="age",ylab="weight",main="My Wonderful Plot",pch=19,col="blue")
+points(6,5,pch=19,col="red")
+```
+```{r plotting3}
+plot(dogs$age,dogs$weight,xlab="age",ylab="weight",main="My Wonderful Plot",pch=19,col="red")
+points(6,5,pch=19,col="red")
+```
+```{r plotting3}
+plot(dogs$age,dogs$weight,xlab="age",ylab="weight",main="My Wonderful Plot",pch=19,col="red")
+points(dogs$age[dogs$weight<10],dogs$weight[dogs$weight<10],pch=19,col="red")
+```
+```{r plotting_histogram}
+hist(dogs$weight) # frequency
+```
+
+```{r plotting_histogram2}
+# The histogram that we just made has "Frequency" on the  𝑦
+#  -axis. In this case, the height of each bar represents the total number of dogs in the data
+#  set whose height falls in the ranges that make up the bases ("bins") of the rectangles. Throughtout
+#  this course, we will want to use "Density" instead of "Frequency". When the  𝑦
+#  -axis uses "density", the height of each bar will be such that the total are of each bar is
+#  the proportion of dogs whose weight falls into the associated range. This will become an estimate of
+#  the probability of any dog's weight being in that range if we were to sample more dogs. Run the next cell.
+hist(dogs$weight,prob=T) # density
+```
+```{r plotting_histogram3}
+# Let's check out the proportion of dogs in our sample whose weight is less than 5 units.
+length(dogs$weight[dogs$weight<5])/length(dogs$weight)
+
+# Note that the first rectangle has base width  5
+#   and therefore area  (5)(0.04)=0.2
+#  .
+# Finally, let's change the width of the bins of this histogram. That is,
+# let's change where we put the "breaks" and make each bar only 2 units wide. We will
+# make a sequence of numbers that will cover the range of the data. (We have already checked the
+# range of the data by typing min(dogs$weight) and
+# max(dogs$weight) )
+
+br<-seq(0,24,2)
+hist(dogs$weight,prob=T,breaks=br)
+```
