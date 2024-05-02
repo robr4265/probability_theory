@@ -1,0 +1,7 @@
+# Variables
+# Vectors
+# Functions
+# Loops
+# Conditionals
+# Matrices
+# Data Frames
